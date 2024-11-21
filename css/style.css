@@ -798,8 +798,16 @@ select#productID {
 }
 
 #sideNav img {
-    width: 200px;
-    padding-left: 17px;
+    width: 53px;
+    position: absolute;
+    top: 12px;
+    left: 7px;
+}
+
+.mng-top-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .data {

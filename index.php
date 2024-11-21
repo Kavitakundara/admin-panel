@@ -88,14 +88,14 @@
         // Redirect based on role
         switch (user.role) {
             case "super-admin":
-                window.location.href = "./super-admin/home.html";
+                window.location.href = "./super-admin/home.php";
                 break;
             case "admin":
-                window.location.href = "./admin/manager-create.html";
+                window.location.href = "./admin/manager-create.php";
                 break;
             case "dealer":
             case "distributor":
-                window.location.href = "./manager/order-page.html";
+                window.location.href = "./manager/order-page.php";
                 break;
             default:
                 alert("Unknown role. Please contact support.");
