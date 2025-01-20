@@ -43,11 +43,11 @@ include '../auth.php';
         <div id="sideNav">
             <button class="closeBtn">&times;</button>
             <ul>
-                <!-- <li><i class="fas fa-home"></i><a href="./manager-home.php">Home</a></li> -->
-                <li><i class="fas fa-eye"></i> <a href="./order-page.php">Place Order</a></li>
-                <li><i class="fas fa-eye"></i> <a href="./view-orders.php">View Orders</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./sales-page.php">Create Sales</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./view-sales.php">View Sales</a></li>
+                <!-- <li><i class="fas fa-home"></i><a href="./admin-home.php">Home</a></li> -->
+                <li><i class="fas fa-user-cog"></i> <a href="./manager-create.php">Create Manager</a></li>
+                <li><i class="fas fa-eye"></i><a href="./admin-view-mng.php">View Manager</a></li>
+                <li><i class="fab fa-salesforce"></i><a href="./admin-mg-sales.php">View Sales</a></li>
+                <li><i class="fab fa-first-order-alt"></i><a href="./admin-mg-orders.php">View Orders</a></li>
             </ul>
         </div>
     </div>
@@ -60,7 +60,6 @@ include '../auth.php';
                 <tr>
                     <th scope="col">Product Name</th>
                     <th scope="col">Model</th>
-                    <th scope="col">Qty</th>
                     <th scope="col">Colour</th>
                     <th scope="col">Motor No.</th>
                     <th scope="col">Chassis No.</th>
@@ -87,11 +86,9 @@ include '../auth.php';
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $priceWithoutGST = $row['price'] / 1.05; // Deducting 5% GST
             echo "<tr>";
             echo "<td>" . htmlspecialchars($row['product_name']) . "</td>";
             echo "<td>" . htmlspecialchars($row['model']) . "</td>";
-            echo "<td>" . htmlspecialchars($row['qty']) . "</td>";
             echo "<td>" . htmlspecialchars($row['color']) . "</td>";
             echo "<td>" . htmlspecialchars($row['motor_no']) . "</td>";
             echo "<td>" . htmlspecialchars($row['chassis_no']) . "</td>";
@@ -100,7 +97,7 @@ include '../auth.php';
             echo "<td>" . htmlspecialchars($row['charger']) . "</td>";
             echo "<td>" . htmlspecialchars($row['rto']) . "</td>";
             echo "<td>" . htmlspecialchars($row['oth_chrg']) . "</td>";
-            echo "<td>" . htmlspecialchars(number_format($priceWithoutGST, 2)) . "</td>";
+            echo "<td>" . htmlspecialchars($row['price']) . "</td>";
             echo "<td>" . htmlspecialchars($row['sale_mode']) . "</td>";
             echo "<td>" . htmlspecialchars($row['buyer_name']) . "</td>";
             echo "<td>" . htmlspecialchars($row['buyer_no']) . "</td>";

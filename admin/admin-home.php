@@ -15,7 +15,7 @@ include '../auth.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
     <script src="../js/istocken.js"></script>
 
-    <title>Manager Home</title>
+    <title>Admin Home Page</title>
 </head>
 
 <body>
@@ -42,13 +42,13 @@ include '../auth.php';
         <!-- Side Navigation Bar -->
         <div id="sideNav">
             <button class="closeBtn">&times;</button>
+            <img src="https://www.rayonengineers.com/assets/img/logo.png" alt="">
             <ul>
-                <!-- <li><i class="fas fa-home"></i><a href="./manager-home.php">Home</a></li> -->
-                <li><i class="fas fa-eye"></i></i> <a href="./order-page.php">Place Order</a></li>
-                <li><i class="fas fa-eye"></i></i> <a href="./view-orders.php">View Orders</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./sales-page.php">Create Sales</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./view-sales.php">View Sales</a></li>
-
+                <!-- <li><i class="fas fa-home"></i><a href="./admin-home.php">Home</a></li> -->
+                <li><i class="fas fa-user-cog"></i> <a href="./manager-create.php">Create Manager</a></li>
+                <li><i class="fas fa-eye"></i><a href="./admin-view-mng.php">View Manager</a></li>
+                <li><i class="fab fa-salesforce"></i><a href="./admin-mg-sales.php">View Sales</a></li>
+                <li><i class="fab fa-first-order-alt"></i><a href="./admin-mg-orders.php">View Orders</a></li>
             </ul>
         </div>
     </div>
@@ -56,7 +56,6 @@ include '../auth.php';
     <div id="content">
     </div>
     </div>
-
     <script src="../js/navcss.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

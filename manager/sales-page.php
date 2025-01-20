@@ -1,3 +1,48 @@
+<?php
+include '../auth.php';
+include '../conn.php';
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Get form data
+// Retrieving and sanitizing form inputs
+$product_name = $conn->real_escape_string($_POST['productID']);
+$model = $conn->real_escape_string($_POST['model']);
+$colour = $conn->real_escape_string($_POST['colour']);
+$chassis_no = $conn->real_escape_string($_POST['chassisNo']);
+$motor_no = $conn->real_escape_string($_POST['motorNo']);
+$controller_no = $conn->real_escape_string($_POST['controllerNo']);
+$battery_no = $conn->real_escape_string($_POST['batteryNo']);
+$charger = $conn->real_escape_string($_POST['charger']);
+$rto_charge = $conn->real_escape_string($_POST['rtoCharge']);
+$other_charge = $conn->real_escape_string($_POST['otherCharge']);
+$total_price = $conn->real_escape_string($_POST['tprice']);
+$sale_mode = $conn->real_escape_string($_POST['saleMode']);
+$buyer_name = $conn->real_escape_string($_POST['buyerName']);
+$buyer_phone = $conn->real_escape_string($_POST['buyerPhoneNumber']);
+$buyer_address = $conn->real_escape_string($_POST['buyerAddress']);
+$qty = $conn->real_escape_string($_POST['qty']);
+$date = $conn->real_escape_string($_POST['date']);
+
+
+
+$sql = "INSERT INTO create_sales (product_name, model, color, chassis_no, motor_no, controller_no,
+battery_no, charger, rto, oth_chrg, price, sale_mode, buyer_name, buyer_no, buyer_add, qty, sale_date)
+
+VALUES ('$product_name', '$model', '$colour', '$chassis_no', '$motor_no', '$controller_no',
+'$battery_no', '$charger', '$rto_charge', '$other_charge', '$total_price', '$sale_mode',
+'$buyer_name', '$buyer_phone', '$buyer_address', '$qty', '$date')";
+
+
+if ($conn->query($sql) === TRUE) {
+echo "Order placed successfully!";
+} else {
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+}
+
+// Close the connection
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,113 +98,94 @@
             <div class="row">
                 <div class="col-lg-12 min_he">
                     <div class="title">Create Sales</div>
-                    <form id="salesForm">
+                    <form id="salesForm" method="POST" action="">
                         <div class="user__details">
                             <div class="input__box mx-2">
                                 <span class="details">Product Name:</span>
                                 <select id="productID" name="productID" required>
                                     <option value="">Select a product</option>
                                     <option value="one">One</option>
+                                    <option value="Two">Two</option>
+                                    <option value="Three">Three</option>
+                                    <option value="Four">Four</option>
+                                    <option value="Five">Five</option>
+
                                 </select>
                             </div>
                             <div class="input__box mx-2">
-                                <span class="details">Quantity:</span>
-                                <input type="number" id="quantity" name="quantity" min="1" required>
+                                <span class="details">Model:</span>
+                                <input type="text" id="model" name="model" required>
                             </div>
                             <div class="input__box mx-2">
-                                <span class="details">Buyer Name</span>
-                                <input type="text" name="buyerName" id="buyerName">
+                                <span class="details">Colour:</span>
+                                <input type="text" id="colour" name="colour" required>
                             </div>
                             <div class="input__box mx-2">
-                                <span class="details">Buyer Phone Number</span>
-                                <input type="number" name="buyerPhoneNumber" id="buyerPhoneNumber">
+                                <span class="details">Chassis No.:</span>
+                                <input type="text" id="chassisNo" name="chassisNo" required>
                             </div>
                             <div class="input__box mx-2">
-                                <span class="details">Buyer Address</span>
-                                <input type="text" name="buyerAddress" id="buyerAddress">
+                                <span class="details">Motor No.:</span>
+                                <input type="text" id="motorNo" name="motorNo" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Controller No.:</span>
+                                <input type="text" id="controllerNo" name="controllerNo" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Battery No.:</span>
+                                <input type="text" id="batteryNo" name="batteryNo" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Charger:</span>
+                                <input type="text" id="charger" name="charger" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">RTO Charge:</span>
+                                <input type="text" id="rtoCharge" name="rtoCharge" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Other Charge:</span>
+                                <input type="text" id="otherCharge" name="otherCharge" required>
                             </div>
                             <div class="input__box mx-2">
                                 <span class="details">Total Price:</span>
                                 <input type="text" id="totalPrice" name="tprice" required>
                             </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Sale Mode:</span>
+                                <select id="saleMode" name="saleMode" required>
+                                    <option value="cash">Cash</option>
+                                    <option value="finance">Finance</option>
+                                </select>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Buyer Name:</span>
+                                <input type="text" name="buyerName" id="buyerName" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Buyer Phone Number:</span>
+                                <input type="number" name="buyerPhoneNumber" id="buyerPhoneNumber" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Buyer Address:</span>
+                                <input type="text" name="buyerAddress" id="buyerAddress" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Quantity</span>
+                                <input type="number" name="qty" id="qty" required>
+                            </div>
+                            <div class="input__box mx-2">
+                                <span class="details">Date</span>
+                                <input type="date" name="date" id="date" required>
+                            </div>
                         </div>
-                        <button type="submit" id="regi-btn" class="button  btn_bb">Place Order</button>
+                        <button type="submit" id="regi-btn" class="button btn_bb">Place Order</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-        // Fetch products from the API and populate the dropdown
-        async function fetchProducts() {
-            try {
-                const response = await fetch("http://localhost:9000/api/products/get-product");
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                const products = await response.json();
-                const productSelect = document.getElementById("productID");
-
-                products.data.forEach((product) => {
-                    const option = document.createElement("option");
-                    option.value = product.id;
-                    option.textContent = product.name;
-                    productSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error("There was a problem with the fetch operation:", error);
-            }
-        }
-
-        // Call fetchProducts when the page loads
-        document.addEventListener("DOMContentLoaded", fetchProducts);
-
-        // Handle form submission
-        document.getElementById("salesForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const productID = document.getElementById("productID").value;
-            const quantity = document.getElementById("quantity").value;
-            const buyerName = document.getElementById("buyerName").value;
-            const buyerPhoneNumber = document.getElementById("buyerPhoneNumber").value;
-            const buyerAddress = document.getElementById("buyerAddress").value;
-            const totalPrice = document.getElementById("totalPrice").value;
-
-            let obj = { productID, quantity, totalPrice, buyerName, buyerPhoneNumber, buyerAddress };
-
-            fetch("http://localhost:9000/api/sales/create-sales", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${sessionToken}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(obj),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.status) {
-                        // Use SweetAlert for success notification
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Sales Added successfully!',
-                            text: 'Sales Added successfully!',
-                        });
-                    } else {
-                        // Use SweetAlert for success notification
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error in creating Sales Report!',
-                            text: 'Error in creating Sales Report!',
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.error("There was a problem with the fetch operation:", error);
-                    alert("Error placing order. Please try again later.");
-                });
-        });
-    </script>
     <script src="../js/navcss.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

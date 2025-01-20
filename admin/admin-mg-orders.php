@@ -40,10 +40,11 @@ include '../auth.php';
         <div id="sideNav">
             <button class="closeBtn">&times;</button>
             <ul>
-                <li><i class="fas fa-eye"></i> <a href="./order-page.php">Place Order</a></li>
-                <li><i class="fas fa-eye"></i> <a href="./view-orders.php">View Orders</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./sales-page.php">Create Sales</a></li>
-                <li><i class="fab fa-salesforce"></i><a href="./view-sales.php">View Sales</a></li>
+                <!-- <li><i class="fas fa-home"></i><a href="./admin-home.php">Home</a></li> -->
+                <li><i class="fas fa-user-cog"></i> <a href="./manager-create.php">Create Manager</a></li>
+                <li><i class="fas fa-eye"></i><a href="./admin-view-mng.php">View Manager</a></li>
+                <li><i class="fab fa-salesforce"></i><a href="./admin-mg-sales.php">View Sales</a></li>
+                <li><i class="fab fa-first-order-alt"></i><a href="./admin-mg-orders.php">View Orders</a></li>
             </ul>
         </div>
     </div>
