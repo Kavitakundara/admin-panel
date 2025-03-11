@@ -1,82 +1,58 @@
 <?php
 session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$superAdminDB = "super_admin"; // super-admin database name
-
-// Create connection for super_admin database
-$conn = new mysqli($servername, $username, $password, $superAdminDB);
-
-// Check connection
+include 'view/conn.php';
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Connection to manager DB failed: " . $conn->connect_error);
 }
 
-// Redirect to dashboard if session is already active
-if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
-    if ($_SESSION['role'] === 'super-admin') {
-        header('Location: super-admin/home.php'); // Redirect to super-admin dashboard
-        exit();
-    } elseif ($_SESSION['role'] === 'admin') {
-        header('Location: admin/admin-home.php'); // Redirect to admin dashboard
-        exit();
-    } elseif ($_SESSION['role'] === 'manager') {
-        header('Location: manager/manager-home.php'); // Redirect to manager dashboard
-        exit();
-    }
-}
+// Redirect to the respective dashboard if a session is active
+// if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
+//     switch ($_SESSION['role']) {
+//         case 'super-admin':
+//             header('Location: view/super-admin/super-admin-home.php');
+//             exit();
+//         case 'admin':
+//             header('Location: view/admin/admin-home.php');
+//             exit();
+//         case 'manager':
+//             header('Location: view/manager/manager-home.php');
+//             exit();
+//     }
+// }
 
+// Handle POST request for login
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    // Check in super-admin's 'user' table
-    $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $superAdminUser = $result->fetch_assoc();
+    // Array of roles, their respective tables, and database connections
+    $roles = [
+        'super-admin' => ['table' => 'user', 'conn' => $conn],
+        'admin' => ['table' => 'create_admin', 'conn' => $conn],
+        'manager' => ['table' => 'create_manager', 'conn' => $conn],
+    ];
 
-    if ($superAdminUser && password_verify($password, $superAdminUser['password'])) {
-        // If super-admin is found, set session and redirect to super-admin dashboard
-        $_SESSION['user_id'] = $superAdminUser['id'];
-        $_SESSION['username'] = $superAdminUser['username'];
-        $_SESSION['role'] = 'super-admin';
-        header('Location: super-admin/home.php');
-        exit();
-    }
+    foreach ($roles as $role => $details) {
+        $conn = $details['conn'];
+        $table = $details['table'];
 
-    // Check in admin's 'create_admin' table
-    $stmt = $conn->prepare("SELECT * FROM create_admin WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $adminUser = $result->fetch_assoc();
+        $stmt = $conn->prepare("SELECT * FROM $table WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
 
-    if ($adminUser && password_verify($password, $adminUser['password'])) {
-        // If admin is found, set session and redirect to admin dashboard
-        $_SESSION['user_id'] = $adminUser['id'];
-        $_SESSION['username'] = $adminUser['username'];
-        $_SESSION['role'] = 'admin';
-        header('Location: admin/admin-home.php');
-        exit();
-    }
+        if ($user && password_verify($password, $user['password'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['name'] = $user['name'];
 
-    // Check in manager's 'create_manager' table
-    $stmt = $conn->prepare("SELECT * FROM create_manager WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $managerUser = $result->fetch_assoc();
-
-    if ($managerUser && password_verify($password, $managerUser['password'])) {
-        // If manager is found, set session and redirect to manager dashboard
-        $_SESSION['user_id'] = $managerUser['id'];
-        $_SESSION['username'] = $managerUser['username'];
-        $_SESSION['role'] = 'manager';
-        header('Location: manager/manager-home.php');
-        exit();
+            // Redirect to the respective dashboard
+            header("Location: view/$role/{$role}-home.php");
+            exit();
+        }
     }
 
     // If no match is found
@@ -89,61 +65,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>";
 }
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/style.css" />
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="view/css/style.css">
+    <title>Login</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body style="background-color: #2c323a">
+<body style="background-color: #2c323a;">
     <div id="preloader">
         <div id="loader">
-            <img src="https://www.rayonengineers.com/assets/img/logo.png" alt="Loading..." />
+            <img src="https://www.rayonengineers.com/assets/img/logo.png" alt="Loading...">
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div id="main-content" style="display: none">
-        <!-- Your main content goes here -->
-        <div class="form-sec">
-            <img src="https://www.rayonengineers.com/assets/img/logo.png" alt="" class="login-img" />
-            <form class="container-2" id="login-form" method="POST" novalidate>
-                <div>
+    <div id="main-content" style="display: none;">
+        <div class="container mng-form">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
                     <h3>Welcome Back</h3>
+                    <p>This portal is exclusively designed for our trusted dealers and partners. Please log in with your
+                        credentials to access your dashboard.</p>
                 </div>
-                <div>
-                    <label for="username">Username or Email</label>
-                    <input id="username" type="text" name="username" required minlength="4" />
-                    <span class="error" aria-live="polite"></span>
+                <div class="col-lg-6">
+                    <div class="form-sec">
+                        <form id="login-form" method="POST">
+                            <div>
+                                <input id="username" type="text" name="username" required minlength="4"
+                                    placeholder="Username">
+                            </div>
+                            <div>
+                                <input id="password" type="password" name="password" required minlength="4"
+                                    placeholder="Password">
+                            </div>
+                            <button type="submit">Login</button>
+                            <a href="https://www.rayonengineers.com/">Back To The Website</a>
+                        </form>
+                    </div>
                 </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input id="password" type="password" name="password" required minlength="8" />
-                    <a href="#">Forgot your password?</a>
-                </div>
-                <button type="submit" id="submit-btn">Login</button>
-                <span aria-live="assertive" id="js-loadingMsg" class="sr-only">
-                    <!-- Use JavaScript to inject the loading message -->
-                </span>
-            </form>
+            </div>
         </div>
     </div>
 
     <script>
-    // Function to simulate loading time and hide preloader
+    // Hide preloader after loading
     window.addEventListener("load", function() {
-        setTimeout(function() {
+        setTimeout(() => {
             document.getElementById("preloader").style.display = "none";
             document.getElementById("main-content").style.display = "block";
-        }, 2000); // Simulate a 2-second loading time
+        }, 2000);
     });
     </script>
-
 </body>
 
 </html>
